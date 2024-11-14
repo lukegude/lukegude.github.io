@@ -1,0 +1,175 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <title>Luke's Blog</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="../assets/css/main.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/4.0.2/marked.min.js"></script>
+    <script src="config.js"></script>
+    <noscript><link rel="stylesheet" href="../assets/css/noscript.css" /></noscript>
+</head>
+<body class="is-preload">
+    <div id="page-wrapper">
+        <!-- Header -->
+        <header id="header">
+            <h1><a href="../index.html">Luke Gude</a></h1>
+            <nav id="nav">
+                <ul>
+                    <li><a href="../index.html">Home</a></li>
+                    <li><a href="admin.html">Admin</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- Main -->
+        <article id="main">
+            <header>
+                <h2>Blog Posts</h2>
+                <p>Thoughts, tutorials, and tech insights</p>
+            </header>
+            <section class="wrapper style5">
+                <div class="inner">
+                    <div id="blog-posts">
+                        <!-- Blog posts will be dynamically inserted here -->
+                    </div>
+                    <div id="pagination" class="pagination">
+                        <!-- Pagination controls will be dynamically inserted here -->
+                    </div>
+                </div>
+            </section>
+        </article>
+    </div>
+
+    <script>
+        const POSTS_PER_PAGE = 5;
+        let currentPage = 1;
+        let allPosts = [];
+
+        // Function to parse YAML front matter
+        function parseFrontMatter(content) {
+            const match = content.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
+            if (!match) return { content };
+            
+            const frontMatter = {};
+            match[1].split('\n').forEach(line => {
+                const [key, value] = line.split(': ');
+                if (key && value) {
+                    frontMatter[key.trim()] = value.trim();
+                }
+            });
+            
+            return {
+                ...frontMatter,
+                content: match[2]
+            };
+        }
+
+        // Function to get preview text (first 200 characters)
+        function getPreview(content) {
+            const plainText = content.replace(/[#*`]/g, '').trim();
+            return plainText.length > 200 ? plainText.substring(0, 200) + '...' : plainText;
+        }
+
+        // Function to display posts for current page
+        function displayCurrentPage() {
+            const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
+            const endIndex = startIndex + POSTS_PER_PAGE;
+            const postsToShow = allPosts.slice(startIndex, endIndex);
+            
+            const blogPostsContainer = document.getElementById('blog-posts');
+            const postsHTML = postsToShow.map(post => `
+                <article class="blog-post">
+                    <h3><a href="post.html?id=${post.filename}">${post.title}</a></h3>
+                    <p class="post-date">${new Date(post.date).toLocaleDateString()}</p>
+                    <div class="post-preview">
+                        ${getPreview(post.content)}
+                    </div>
+                    <p><a href="post.html?id=${post.filename}" class="button small">Read More</a></p>
+                    <hr>
+                </article>
+            `).join('');
+
+            blogPostsContainer.innerHTML = postsHTML;
+
+            // Update pagination
+            const totalPages = Math.ceil(allPosts.length / POSTS_PER_PAGE);
+            const paginationContainer = document.getElementById('pagination');
+            
+            let paginationHTML = '';
+            
+            if (currentPage > 1) {
+                paginationHTML += `<a href="#" onclick="changePage(${currentPage - 1})" class="button small">Previous</a> `;
+            }
+            
+            for (let i = 1; i <= totalPages; i++) {
+                if (i === currentPage) {
+                    paginationHTML += `<span class="button small primary">${i}</span> `;
+                } else {
+                    paginationHTML += `<a href="#" onclick="changePage(${i})" class="button small">${i}</a> `;
+                }
+            }
+            
+            if (currentPage < totalPages) {
+                paginationHTML += `<a href="#" onclick="changePage(${currentPage + 1})" class="button small">Next</a>`;
+            }
+            
+            paginationContainer.innerHTML = paginationHTML;
+        }
+
+        // Function to change page
+        function changePage(newPage) {
+            currentPage = newPage;
+            displayCurrentPage();
+            window.scrollTo(0, 0);
+        }
+
+        // Function to load and display blog posts
+        async function loadBlogPosts() {
+            const blogPostsContainer = document.getElementById('blog-posts');
+            
+            try {
+                // Get the contents of the blog/posts directory
+                const response = await fetch(`https://api.github.com/repos/${config.username}/${config.repo}/contents/blog/posts`);
+                const files = await response.json();
+
+                if (!Array.isArray(files) || files.length === 0) {
+                    blogPostsContainer.innerHTML = '<p>No blog posts yet!</p>';
+                    return;
+                }
+
+                // Sort files by name (which includes the date) in reverse order
+                files.sort((a, b) => b.name.localeCompare(a.name));
+
+                // Fetch and parse each post
+                allPosts = await Promise.all(files.map(async file => {
+                    const contentResponse = await fetch(file.download_url);
+                    const content = await contentResponse.text();
+                    const parsed = parseFrontMatter(content);
+                    return {
+                        ...parsed,
+                        filename: file.name
+                    };
+                }));
+
+                // Display the first page
+                displayCurrentPage();
+            } catch (error) {
+                console.error('Error loading posts:', error);
+                blogPostsContainer.innerHTML = '<p>Error loading blog posts. Please try again later.</p>';
+            }
+        }
+
+        // Load posts when the page loads
+        document.addEventListener('DOMContentLoaded', loadBlogPosts);
+    </script>
+
+    <script src="../assets/js/jquery.min.js"></script>
+    <script src="../assets/js/jquery.scrollex.min.js"></script>
+    <script src="../assets/js/jquery.scrolly.min.js"></script>
+    <script src="../assets/js/browser.min.js"></script>
+    <script src="../assets/js/breakpoints.min.js"></script>
+    <script src="../assets/js/util.js"></script>
+    <script src="../assets/js/main.js"></script>
+</body>
+</html>
