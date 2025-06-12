@@ -1,0 +1,4 @@
+title: Luke Gude
+plugins:
+  - jekyll-feed
+permalink: /blog/:year/:month/:day/:title/
