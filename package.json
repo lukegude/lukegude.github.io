@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "description": "Personal website",
   "scripts": {
-    "build:css": "tailwindcss -i ./assets/css/blog.css -o ./_site/assets/css/blog.css",
-    "watch:css": "tailwindcss -i ./assets/css/blog.css -o ./_site/assets/css/blog.css --watch",
+    "build:css": "tailwindcss -i ./assets/css/blog.css -o ./assets/css/tailwind.css",
+    "watch:css": "tailwindcss -i ./assets/css/blog.css -o ./assets/css/tailwind.css --watch",
     "build": "npm run build:css && jekyll build",
     "start": "npm run watch:css & bundle exec jekyll serve --livereload"
   },
