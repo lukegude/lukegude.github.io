@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom styles */
+body {
+  @apply bg-gray-50 text-gray-900;
+}
+
+/* Typography overrides */
+.prose {
+  @apply max-w-3xl mx-auto px-4 sm:px-6 lg:px-8;
+}
+
+.prose :where(h1, h2, h3, h4, h5, h6):not(:where([class~="not-prose"] *)) {
+  @apply mt-8 mb-4;
+}
+
+.prose :where(h1):not(:where([class~="not-prose"] *)) {
+  @apply text-3xl sm:text-4xl;
+}
+
+.prose :where(h2):not(:where([class~="not-prose"] *)) {
+  @apply text-2xl sm:text-3xl;
+}
+
+.prose :where(p):not(:where([class~="not-prose"] *)) {
+  @apply my-4 leading-relaxed;
+}
+
+.prose :where(a):not(:where([class~="not-prose"] *)) {
+  @apply text-blue-600 hover:text-blue-800 transition-colors;
+}
+
+/* Code blocks */
+.prose :where(pre):not(:where([class~="not-prose"] *)) {
+  @apply bg-gray-800 rounded-lg p-4 overflow-x-auto my-6;
+}
+
+.prose :where(code):not(:where([class~="not-prose"] *)) {
+  @apply bg-gray-100 text-gray-800 px-1.5 py-0.5 rounded text-sm font-mono;
+}
+
+.prose :where(pre code):not(:where([class~="not-prose"] *)) {
+  @apply bg-transparent text-gray-100 p-0;
+}
+
+/* Blockquotes */
+.prose :where(blockquote):not(:where([class~="not-prose"] *)) {
+  @apply border-l-4 border-gray-200 pl-4 italic text-gray-600;
+}
+
+/* Tables */
+.prose :where(table):not(:where([class~="not-prose"] *)) {
+  @apply w-full my-6 border-collapse;
+}
+
+.prose :where(th):not(:where([class~="not-prose"] *)) {
+  @apply bg-gray-50 text-left p-3 font-semibold border-b border-gray-200;
+}
+
+.prose :where(td):not(:where([class~="not-prose"] *)) {
+  @apply p-3 border-b border-gray-200;
+}
+
+/* Custom components */
+.btn {
+  @apply inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors;
+}
+
+.card {
+  @apply bg-white rounded-lg shadow-md overflow-hidden transition-shadow duration-200 hover:shadow-lg;
+}
+
+/* Responsive images */
+.prose :where(img):not(:where([class~="not-prose"] *)) {
+  @apply my-6 rounded-lg shadow-md w-full h-auto;
+}
+
+/* Lists */
+.prose :where(ul, ol):not(:where([class~="not-prose"] *)) {
+  @apply my-4 pl-6;
+}
+
+.prose :where(li):not(:where([class~="not-prose"] *)) {
+  @apply my-2;
+}
+
+.prose :where(ul > li):not(:where([class~="not-prose"] *)) {
+  @apply list-disc;
+}
+
+.prose :where(ol > li):not(:where([class~="not-prose"] *)) {
+  @apply list-decimal;
+}

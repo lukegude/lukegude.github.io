@@ -9,3 +9,5 @@ git_source(:github) {|repo_name| "https://github.com/#{repo_name}" }
 gem "jekyll", "~> 4.3"
 
 gem "jekyll-feed", "~> 0.17.0"
+
+gem "jekyll-postcss"

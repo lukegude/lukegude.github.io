@@ -1,10 +1,28 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ page.title | default: site.title }}</title>
-    <link rel="stylesheet" href="styles.css" />
+    <!-- Include your custom CSS with Tailwind -->
+    <link rel="stylesheet" href="{{ '/assets/css/blog.css' | relative_url }}">
   </head>
-  <body>
-    {{ content }}
+  <body class="min-h-screen bg-gray-100">
+    <div class="container mx-auto px-4 py-8 max-w-4xl">
+      <header class="mb-8">
+        <h1 class="text-4xl font-bold text-gray-800 mb-2">{{ page.title | default: site.title }}</h1>
+        {% if page.date %}
+          <p class="text-gray-600">{{ page.date | date: "%B %-d, %Y" }}</p>
+        {% endif %}
+      </header>
+      
+      <main class="bg-white rounded-lg shadow-md p-6">
+        {{ content }}
+      </main>
+      
+      <footer class="mt-8 text-center text-gray-600 text-sm">
+        <p>© {{ site.time | date: '%Y' }} {{ site.title }}. All rights reserved.</p>
+      </footer>
+    </div>
   </body>
 </html>
