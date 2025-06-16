@@ -1,9 +1,8 @@
 ---
 title: First Post
 date: 2025-06-11
-layout: default
+layout: post
 ---
-# First Post
 
 This is the start of my thought dump journey of things.
 

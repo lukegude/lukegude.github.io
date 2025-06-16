@@ -1,21 +1,72 @@
 ---
 layout: default
-title: Blog
 ---
 
-<h1 class="text-3xl font-bold text-gray-800 mb-8">Blog Posts</h1>
+<header class="blog-header">
+  <h1>Blog Posts</h1>
+</header>
 
-<div class="space-y-8">
+<div class="blog-grid">
   {% for post in site.posts %}
-    <article class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-      <div class="p-6">
-        <h2 class="text-2xl font-semibold text-gray-800 mb-2">
-          <a href="{{ post.url | relative_url }}" class="hover:text-blue-600 transition-colors duration-200">
-            {{ post.title }}
-          </a>
+    <article class="blog-card">
+      <div class="inner">
+        <h2>
+          <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
         </h2>
-        <time class="text-gray-500 text-sm">{{ post.date | date: "%B %d, %Y" }}</time>
+        <time class="published">{{ post.date | date: "%B %d, %Y" }}</time>
+        {% if post.excerpt %}
+          <p>{{ post.excerpt | strip_html | truncatewords: 20 }}</p>
+        {% endif %}
+        <a href="{{ post.url | relative_url }}" class="button fit">Read More</a>
       </div>
     </article>
   {% endfor %}
 </div>
+
+<style>
+  .blog-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+    padding: 0 2rem;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .blog-card {
+    background: #1f262d;
+    border-radius: 4px;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  }
+
+  .blog-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  }
+
+  .blog-card .inner {
+    padding: 2rem;
+  }
+
+  .blog-card h2 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .blog-card time {
+    display: block;
+    color: #7f888f;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+  }
+
+
+  @media screen and (max-width: 736px) {
+    .blog-grid {
+      grid-template-columns: 1fr;
+      padding: 0 1rem;
+    }
+  }
+</style>
